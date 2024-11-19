@@ -1,37 +1,56 @@
-const inputItem = document.getElementById('item');
-const btnAgregar = document.getElementById('agregar');
-const btnLimpiar = document.getElementById('limpiar');
-const contenedor = document.getElementById('contenedor');
+// Array extraño
+const strangeArray = [
+  "Zero",
+  function () {
+    alert("Hola soy una función en un array");
+  },
+  22,
+  null,
+  "Go lang",
+  undefined,
+  "Cobol",
+  "I'm programmer",
+  -2000,
+  "Hello world",
+  `One is ${1}`,
+  { name: "Info", lastname: "last info" },
+  () => true,
+  function showNumbers() {
+    return "1, 2, 3, 4";
+  },
+  "Another String",
+  ["Hola mundo!"],
+  "b is a letter",
+  "JavaScript",
+];
 
-function cargarListado() {
-    const itemsGuardados = JSON.parse(localStorage.getItem('listadoItems')) || [];
-    contenedor.innerHTML = '';
-    for (let i = 0; i < itemsGuardados.length; i++) {
-      const li = document.createElement('li');
-      li.className = 'list-group-item';
-      li.textContent = itemsGuardados[i];
-      contenedor.appendChild(li);
+// Función que recibe por parámetro un array y muestra sus elementos en pantalla
+function showList(array) {
+  const container = document.getElementById("list");
+  container.innerHTML = "";
+  // Más info de forEach => https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+  array.forEach((element) => {
+    const li = document.createElement("li");
+    li.appendChild(document.createTextNode(element));
+    container.appendChild(li);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", (e) => {
+  const stringElements = strangeArray.filter((element) => typeof element === "string");
+  stringElements.sort(function(a, b) {
+    const lowerA = a.toLowerCase();
+    const lowerB = b.toLowerCase();
+
+    if (lowerA < lowerB) {
+      return -1;
     }
-}
+    if (lowerA > lowerB) {
+      return 1;
+    }
+    return 0;
+  });
 
-function agregarItem() {
-  const nuevoItem = inputItem.value.trim();
-  if (nuevoItem) {
-    const itemsGuardados = JSON.parse(localStorage.getItem('listadoItems')) || [];
-    itemsGuardados.push(nuevoItem);
-    localStorage.setItem('listadoItems', JSON.stringify(itemsGuardados));
-    inputItem.value = ''; 
-    cargarListado(); 
-  }
-}
+  showList(stringElements);
 
-function limpiarListado() {
-  localStorage.removeItem('listadoItems');
-  cargarListado();
-}
-
-btnAgregar.addEventListener('click', agregarItem);
-btnLimpiar.addEventListener('click', limpiarListado);
-
-window.addEventListener('load', cargarListado);
-
+});
